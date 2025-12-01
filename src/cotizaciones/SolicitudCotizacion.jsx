@@ -10,15 +10,15 @@ import CotizacionPDFViewer from '../utils/CotizacionPDFViewer';
 import FileUploadForm from '../utils/FileUploadForm';
 
 const SolicitudCotizacion=({elemented})=> {
-        const logoP1 = "./img/posiciones/1.png";
-        const logoP2 = "./img/posiciones/2.png";
-        const logoP3 = "./img/posiciones/3.png";
-        const logoP4 = "./img/posiciones/4.png";
-        const logoP5 = "./img/posiciones/5.png";
-        const logoP6 = "./img/posiciones/6.png";
-        const logoP7 = "./img/posiciones/7.png";
-        const logoP8 = "./img/posiciones/8.png";
-        const logoP9 = "./img/posiciones/9.png";
+        const position_1 = "./img/posiciones/1.png";
+        const position_2 = "./img/posiciones/2.png";
+        const position_3 = "./img/posiciones/3.png";
+        const position_4 = "./img/posiciones/4.png";
+        const position_5 = "./img/posiciones/5.png";
+        const position_6 = "./img/posiciones/6.png";
+        const position_7 = "./img/posiciones/7.png";
+        const position_8 = "./img/posiciones/8.png";
+        const position_9 = "./img/posiciones/9.png";
         const logo = "./img/cdpLogo2.png";
         const [loadingIcon,setLoadingIcon] = useState(false);
         const [creada, setCreada] = useState(false);
@@ -377,7 +377,54 @@ const SolicitudCotizacion=({elemented})=> {
             className="mx-auto my-auto spin"
             src={logo}
             alt="Logo"
-          /></div>: <div className="cmf02-container">
+          />
+          <img
+            className="mx-auto my-auto spin d-none"
+            src={position_1}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_2}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_3}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_4}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_5}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_6}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_7}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_8}
+            alt="Logo"
+          />
+           <img
+            className="mx-auto my-auto spin d-none"
+            src={position_9}
+            alt="Logo"
+          />
+          
+          </div>: <div className="cmf02-container">
         <form  id="formularioCotizacion" method="POST" onSubmit={handleSubmit(onSubmit)} className="col-12 mx-auto " style={{display: "flex", flexDirection: "row"}}>
             <div className="carousel-item active mx-auto"  style={{padding: "1%", zoom: "90% "}}>
                 <div className="mx-auto"  style={{pmarginBottom: "20px", background: "#ffffff", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"}}>
@@ -1081,7 +1128,7 @@ const SolicitudCotizacion=({elemented})=> {
                                         >
                                             <img 
                                                 className={zoom === `p${position}` ? 'zoom mx-auto' : 'nozoom mx-auto'} 
-                                                src={eval(`logoP${position}`)} 
+                                                src={eval(`position_${position}`)} 
                                                 alt={`Posición ${position}`}
                                             />
                                         </div>
