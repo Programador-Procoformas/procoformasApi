@@ -4,6 +4,7 @@ import Decrypt from '../config/Decrypt';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate,} from '@fortawesome/free-solid-svg-icons';
 import TabulatorTable from '../utils/TabulatorTable';
+const logoP1= "./img/cdpLogo2.png";
 const logo = "./img/cdpLogo2.png";
 const ListSolicitudes=({editarSolicitud,cotizarSolicitud})=> {
       
