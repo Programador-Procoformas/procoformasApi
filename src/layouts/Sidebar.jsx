@@ -25,11 +25,12 @@ const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,
     {
       title: 'Área de cotización',
       icon: '💲',
-      value: '124k',
-      change: '+12.6%',
+      value: '0',
+      change: '0',
       isPositive: true,
       subItems: ['Solicitud', 'Cotizar', 'Solicitudes', 'Cotizaciones'],
-      subItemsLink: ['cotizacion/solicitudCotizacion', 'cotizacion/cotizacion', 'Solicitudes', 'Cotizaciones']
+      subItemsLink: ['cotizacion/solicitudCotizacion', 'cotizacion/cotizacion', 'Solicitudes', 'Cotizaciones'],
+      rol:2
     },
     {
       title: 'Área comercial',
@@ -121,7 +122,7 @@ const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,
       <div className="sidebar-content">
         <ul className="menu">
           {menuItems.map((item, index) => (
-            <li key={index} className={`menu-item rounded ${item.class=='bg-oscure' ? 'bg-oscure' : ''}`}>
+            <li key={index} className={`menu-item rounded ${item.class=='bg-oscure' ? 'bg-oscure' : ''} ${item.rol==2 ? '' : 'd-none'}`}>
               <div 
                 className="menu-item-header"
                 onClick={() => item.subItems && toggleExpand(item.title)}
