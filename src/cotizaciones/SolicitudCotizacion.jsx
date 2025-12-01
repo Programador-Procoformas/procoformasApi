@@ -8,17 +8,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate, faX } from '@fortawesome/free-solid-svg-icons';
 import CotizacionPDFViewer from '../utils/CotizacionPDFViewer';
 import FileUploadForm from '../utils/FileUploadForm';
-const logoP1 = "./img/posiciones/1.png";
-const logoP2 = "./img/posiciones/2.png";
-const logoP3 = "./img/posiciones/3.png";
-const logoP4 = "./img/posiciones/4.png";
-const logoP5 = "./img/posiciones/5.png";
-const logoP6 = "./img/posiciones/6.png";
-const logoP7 = "./img/posiciones/7.png";
-const logoP8 = "./img/posiciones/8.png";
-const logoP9 = "./img/posiciones/9.png";
-const logo = "./img/cdpLogo2.png";
+
 const SolicitudCotizacion=({elemented})=> {
+        const logoP1 = "./img/posiciones/1.png";
+        const logoP2 = "./img/posiciones/2.png";
+        const logoP3 = "./img/posiciones/3.png";
+        const logoP4 = "./img/posiciones/4.png";
+        const logoP5 = "./img/posiciones/5.png";
+        const logoP6 = "./img/posiciones/6.png";
+        const logoP7 = "./img/posiciones/7.png";
+        const logoP8 = "./img/posiciones/8.png";
+        const logoP9 = "./img/posiciones/9.png";
+        const logo = "./img/cdpLogo2.png";
         const [loadingIcon,setLoadingIcon] = useState(false);
         const [creada, setCreada] = useState(false);
         const [alert, setAlert] = useState({});
