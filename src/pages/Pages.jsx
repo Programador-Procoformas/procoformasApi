@@ -10,12 +10,19 @@ import Ingreso from "../comercial/Ingreso";
 import CertificadoLaboral from "../th/init";
 import Cotizacion2 from "../cotizaciones/Cotizacion2";
 import ColorAnalyzer from "../utils/ColorAnalyzer";
+import UserList from "../components/user/UserList";
+import CMF02Form from "../cotizaciones/CMF02Form";
 
 function Pages({page,setPage}){
     const [elemented,setElemented]=useState({});
+    const [elementedC,setElementedC]=useState({});
     function editarSolicitud(element) {
         setElemented(element)
         setPage('cotizacion/solicitudCotizacion')
+    }
+    function cotizarSolicitud(element) {
+        setElementedC(element)
+        setPage('cotizacion/cotizacion')
     }
     function editarCotizacion(element) {
         setElemented(element)
@@ -24,15 +31,16 @@ function Pages({page,setPage}){
     
     function View() {
         switch (page) {
+            case "solicitudCotizacion":
+                 return <CMF02Form elemented={elemented}/>
             case "cotizacion/solicitudCotizacion":
                  return <SolicitudCotizacion elemented={elemented}/>
                 
             case "cotizacion/cotizacion":
-                return <Cotizacion elemented={elemented}/>
-
-                
-            case "cotizacion/listSolicitudes":
-                return <ListSolicitudes editarSolicitud={editarSolicitud}/>
+                return <Cotizacion elemented={elemented} elementedC={elementedC}/>
+            
+            case "Solicitudes":
+                return <ListSolicitudes editarSolicitud={editarSolicitud} cotizarSolicitud={cotizarSolicitud}/>
                 
             case "cotizacion/listCotizaciones":
                 return  <ListCotizaciones editarCotizacion={editarCotizacion}/>
@@ -48,7 +56,9 @@ function Pages({page,setPage}){
             case "th":
                     return  <CertificadoLaboral/> 
             case "cotizacion/coloranalizador":
-                    return  <ColorAnalyzer/>  
+                    return  <ColorAnalyzer/> 
+            case "users":
+                    return  <UserList/>  
             default:
                 return <Home/>
         }

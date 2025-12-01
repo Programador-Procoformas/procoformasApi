@@ -1,247 +1,168 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { SignOutButton } from "../auth/SignOutButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
+import '../styles/Sidebar.css';
+import { Link } from 'react-router-dom';
 
-
-const Sidebar = ({rol,addPage}) => {
-  const [active, setActive] = useState(0);
-  const [isOpenId, setIsOpenID] = useState(0);
-  const [isOpenMenu, setIsOpenMenu] = useState('');
+const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,rol,addPage }) => {
+  const [expandedItems, setExpandedItems] = useState([]);
   const logo = "./img/cdpLogo2.png";
   const logoOnly = "./img/JAT1.png";
-  const cotizacion = "./img/icons/solicitud_cotizacion.png";
-  const comercial = "./img/icons/ICONOS-03.png";
-  const coloricon = "./img/icons/color.png";
-  const almacen = "./img/icons/almacen.png";
-  function setIsOpenMenuFuntion(r, n) {
-    if (isOpenMenu === "" || isOpenId === 0 || isOpenId !== n) {
-      setIsOpenMenu(isOpenMenu === "" || isOpenId !== n ? r : "");
-      setIsOpenID(isOpenMenu === "" || isOpenId !== n ? n : 0);
+  const toggleExpand = (item) => {
+    if (expandedItems.includes(item)) {
+      setExpandedItems(expandedItems.filter(i => i !== item));
     } else {
-      setIsOpenMenu("");
-      setIsOpenID(0);
+      setExpandedItems([...expandedItems, item]);
     }
-  }
-  
- 
-  return (
-    <>
-       
-      <div
-        className={`  w-6vw hover-w-13vw bg-api-p p-2 animacionMenu shadow-lg `}
-        onMouseLeave={()=>setIsOpenMenuFuntion("",0)} style={{zIndex:100}}
-      > 
-        <div className="h-8vh p-0 mx-auto w-100"  style={{width:"100%"}}>
-        <Link onClick={()=>addPage("/")} to="/" className="w-100 mx-auto  h-4vh d-flex flex-row mt-2"  >
-          <img
-            className="mx-auto h-4vh view"
-            src={logo}
-            alt="Logo Argos"
-            style={{width:"auto"}}
-          />
-           
-            <img
-              className=" mx-auto h-4vh hidden "
-              src={logoOnly}
-              alt="Logo argos"
-              style={{width:"75%"}}
-            />
-            <FontAwesomeIcon className="text-black hidden my-auto ms-1 me-1 h-75" icon={faBars} />
+  };
 
-        </Link>
-        <hr style={{height:"",border:"#000000 1px solid"}}></hr>
-        </div>
+  const menuItems = [
+    {
+      title: 'Administración',
+      icon: '🛠️',
+      subItems: ['Usuarios', 'Base de datos', 'Materiales', 'Maquinas', 'Empleados', 'Clientes'],
+      subItemsLink: ['users', 'Base_de_datos', 'Materiales', 'Maquinas', 'Empleados', 'Clientes'],
+      rol:1
+    },
+    {
+      title: 'Área de cotización',
+      icon: '💲',
+      value: '124k',
+      change: '+12.6%',
+      isPositive: true,
+      subItems: ['Solicitud', 'Cotizar', 'Solicitudes', 'Cotizaciones'],
+      subItemsLink: ['cotizacion/solicitudCotizacion', 'cotizacion/cotizacion', 'Solicitudes', 'Cotizaciones']
+    },
+    {
+      title: 'Área comercial',
+      icon: '📈',
+      value: '175k',
+      change: '-16.2%',
+      isPositive: false,
+      subItems: ['Ingreso', 'Aceptar Orden'],
+    },
+    {
+      title: 'Área prerensa',
+      icon: '🎨',
+      value: '1.28k',
+      change: '+42.2%',
+      isPositive: true
+    },
+    {
+      title: 'Área almacén',
+      icon: '🗃️',
+      value: '24.67k',
+      change: '+24.67%',
+      isPositive: true
+    },
+    {
+      title: 'Área compras',
+      icon: '🛒',
+      value: '$4,673',
+      change: '+15.2%',
+      isPositive: true
+    },
+    {
+      title: 'Área de producción',
+      icon: '🏭',
+      value: '$4,673',
+      change: '+15.2%',
+      isPositive: true
+    },
+    {
+      title: 'Área de logística',
+      icon: '🚚',
+      value: '$4,673',
+      change: '+15.2%',
+      isPositive: true
+    },
+    {
+      title: 'Área administrativa',
+      icon: '📊',
+      value: '$4,673',
+      change: '+15.2%',
+      isPositive: true
+    },
+  ];
+
+  const isExpanded = isPinned || isHovered;
+
+  return (
+    <div 
+      className={`sidebar ${isExpanded ? 'expanded' : 'collapsed'} ${isPinned ? 'pinned' : ''}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div className="sidebar-header">
+        <Link onClick={()=>addPage("/")} to="/" className="w-100 mx-auto  h-4vh d-flex flex-row mt-2"  >
+                  <img
+                    className={`mx-auto h-4vh ${isExpanded ? 'hidden' : 'visible'}`}
+                    src={logo}
+                    alt="Logo Argos"
+                    style={{width:"auto",height:'90%'}}
+                  />
+                   
+                    <img
+                      className={`mx-auto h-4vh  ${isExpanded ? 'visible' : 'hidden'}`}
+                      src={logoOnly}
+                      alt="Logo argos"
+                      style={{width:"auto", height:'90%'}}
+                    />
+                    
         
-        <div className="  d-flex flex-column " style={{height:"82vh"}} >
-        {["1","2"].includes(rol) && <> <Link
-            onClick={()=>setIsOpenMenuFuntion("Cotización",1)}
-            className={`${
-              active == 1 && "  "
-            } d-flex mt-1 flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-          >
-           
-             <img
-            className=" text-api-s me-1   my-auto "
-                src={cotizacion}
-                alt="Logo Argos"
-                style={{height:"95%",Width:"auto", objectFit:"contain"}}
-            />
-            <p className="plink hidden overflow-hidden my-auto ">
-              Cotización
-            </p>
-            
-          </Link>
-          <div className={`collapse colla-sidebar p-2 rounded ${isOpenMenu=="Cotización" ? "show":""}`}  >
-                <button
-                  onClick={()=>addPage("cotizacion/solicitudCotizacion")}
-                  className={` mt-3 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Solicitud
-                  </p>
-                  
-                </button>
-                <button
-                  onClick={()=>addPage("cotizacion/cotizacion")}
-                  className={` mt-2 mb-2 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Cotización
-                  </p>
-                  
-                </button>
-                <button
-                  onClick={()=>addPage("cotizacion/listSolicitudes")}
-                  className={` mt-2 mb-2 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Lista de solicitudes
-                  </p>
-                  
-                </button>
-                <button
-                  onClick={()=>addPage("cotizacion/listCotizaciones")}
-                  className={` mt-2 mb-2 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Lista de cotizaciones
-                  </p>
-                  
-                </button>
-            </div></>}
-            {["1","2"].includes(rol) && <> <Link
-            onClick={()=>setIsOpenMenuFuntion("Comercial",2)}
-            className={`${
-              active == 1 && "  "
-            } d-flex mt-1 flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-          >
-           
-             <img
-            className=" text-api-s me-1   my-auto "
-                src={comercial}
-                alt="Logo Argos"
-                style={{height:"95%",Width:"auto", objectFit:"contain"}}
-            />
-            <p className="plink hidden overflow-hidden my-auto ">
-              Comercial
-            </p>
-            
-          </Link>
-         
-          <div className={`collapse colla-sidebar p-2 rounded ${isOpenMenu=="Comercial" ? "show":""}`}  >
-                <button
-                  onClick={()=>addPage("comercial/ingreso")}
-                  className={` mt-3 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Ingreso
-                  </p>
-                  
-                </button>
-                <button
-                  onClick={()=>addPage("comercial/verificacion")}
-                  className={` mt-2 mb-2 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Verificación
-                  </p>
-                  
-                </button>
-              
-            </div></>}
-           <Link
-            onClick={()=>addPage("th")}
-            className={`${
-              active == 1 && "  "
-            } d-flex mt-1 flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-          >
-           
-             <img
-            className=" text-api-s me-1   my-auto "
-                src={comercial}
-                alt="Logo Argos"
-                style={{height:"95%",Width:"auto", objectFit:"contain"}}
-            />
-            <p className="plink hidden overflow-hidden my-auto ">
-              Talento Humano
-            </p>
-            
-          </Link>
-          <Link
-            onClick={()=>addPage("cotizacion/coloranalizador")}
-            className={`${
-              active == 1 && "  "
-            } d-flex mt-1 flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-          >
-           
-             <img
-            className=" text-api-s me-1   my-auto "
-                src={coloricon}
-                alt="Logo Argos"
-                style={{height:"95%",Width:"auto", objectFit:"contain"}}
-            />
-            <p className="plink hidden overflow-hidden my-auto ">
-              Analizador de colores
-            </p>
-            
-          </Link>
-          {["1","2"].includes(rol) && <> <Link
-            onClick={()=>setIsOpenMenuFuntion("Almacén",3)}
-            className={`${
-              active == 1 && "  "
-            } d-flex mt-1 flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-          >
-           
-             <img
-            className=" text-api-s me-1   my-auto "
-                src={almacen}
-                alt="Logo Argos"
-                style={{height:"95%",Width:"auto", objectFit:"contain"}}
-            />
-            <p className="plink hidden overflow-hidden my-auto ">
-              Almacén
-            </p>
-            
-          </Link>
-          <div className={`collapse colla-sidebar p-2 rounded ${isOpenMenu=="Almacén" ? "show":""}`}  >
-                <button
-                  onClick={()=>addPage("almacen/inventario")}
-                  className={` mt-3 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Inventario
-                  </p>
-                  
-                </button>
-                <button
-                  onClick={()=>addPage("almacen/recibir")}
-                  className={` mt-2 mb-2 d-flex flex-row align-middle mx-auto hoverLink p-1 w-100 h-5vh btn-group`}
-                >
-                
-                  <p className="text-api-s  hidden overflow-hidden my-auto mx-auto" style={{fontSize:"12px"}}>
-                    Recibir material
-                  </p>
-                  
-                </button>
-                
-            </div></>}
-           
-        </div>
-        <div className="" style={{display:"flex",height:"10vh",justifyContent:"center",alignItems:"center"}} >
-          <SignOutButton></SignOutButton>
-        </div>
-       
+                </Link>
+        <button 
+          className={`pin-btn ${isPinned ? 'pinned' : ''} ${isExpanded ? 'visible' : 'hidden'}`}
+          onClick={onPinToggle}
+          title={isPinned ? 'Desfijar menú' : 'Fijar menú'}
+        >
+          {isPinned ? '📌' : '📍'}
+        </button>
       </div>
-     </>
+      
+      <div className="sidebar-content">
+        <ul className="menu">
+          {menuItems.map((item, index) => (
+            <li key={index} className={`menu-item rounded ${item.class=='bg-oscure' ? 'bg-oscure' : ''}`}>
+              <div 
+                className="menu-item-header"
+                onClick={() => item.subItems && toggleExpand(item.title)}
+              >
+                <span className="menu-icon">{item.icon}</span>
+                {isExpanded && (
+                  <>
+                    <div className="menu-text">
+                      <span className="menu-title">{item.title}</span>
+                      {item.value && (
+                        <div className="menu-stats d-flex flex-row">
+                          <span className="menu-value mx-auto">{item.value}</span>
+                          <span className={`menu-change mx-auto ${item.isPositive ? 'positive' : 'negative'}`}>
+                            {item.change}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {item.subItems && (
+                      <span className="expand-icon">
+                        {expandedItems.includes(item.title) ? '▼' : '▶'}
+                      </span>
+                    )}
+                  </>
+                )}
+              </div>
+              
+              {item.subItems && expandedItems.includes(item.title) && isExpanded && (
+                <ul className="submenu">
+                  {item.subItems.map((subItem, subIndex) => (
+                    <li key={subIndex} className="submenu-item" onClick={()=>addPage(item.subItemsLink[subIndex])}>
+                      {subItem}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
