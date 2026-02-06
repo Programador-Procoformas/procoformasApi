@@ -20,7 +20,7 @@ const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,
       icon: '🛠️',
       subItems: ['Usuarios', 'Base de datos', 'Materiales', 'Maquinas', 'Empleados', 'Clientes'],
       subItemsLink: ['users', 'Base_de_datos', 'Materiales', 'Maquinas', 'Empleados', 'Clientes'],
-      rol:1
+      rol:['1','2']
     },
     {
       title: 'Área de cotización',
@@ -30,7 +30,7 @@ const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,
       isPositive: true,
       subItems: ['Solicitud', 'Cotizar', 'Solicitudes', 'Cotizaciones'],
       subItemsLink: ['cotizacion/solicitudCotizacion', 'cotizacion/cotizacion', 'Solicitudes', 'Cotizaciones'],
-      rol:2
+      rol:['1','2']
     },
     {
       title: 'Área comercial',
@@ -39,48 +39,55 @@ const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,
       change: '-16.2%',
       isPositive: false,
       subItems: ['Ingreso', 'Aceptar Orden'],
+      rol:['1','2']
     },
     {
       title: 'Área prerensa',
       icon: '🎨',
       value: '1.28k',
       change: '+42.2%',
-      isPositive: true
+      isPositive: true,
+      rol:['1','2']
     },
     {
       title: 'Área almacén',
       icon: '🗃️',
       value: '24.67k',
       change: '+24.67%',
-      isPositive: true
+      isPositive: true,
+      rol:['1','2']
     },
     {
       title: 'Área compras',
       icon: '🛒',
       value: '$4,673',
       change: '+15.2%',
-      isPositive: true
+      isPositive: true,
+      rol:['1']
     },
     {
       title: 'Área de producción',
       icon: '🏭',
       value: '$4,673',
       change: '+15.2%',
-      isPositive: true
+      isPositive: true,
+      rol:['1','2']
     },
     {
       title: 'Área de logística',
       icon: '🚚',
       value: '$4,673',
       change: '+15.2%',
-      isPositive: true
+      isPositive: true,
+      rol:['1','2']
     },
     {
       title: 'Área administrativa',
       icon: '📊',
       value: '$4,673',
       change: '+15.2%',
-      isPositive: true
+      isPositive: true,
+      rol:['1','2']
     },
   ];
 
@@ -122,7 +129,7 @@ const Sidebar = ({ isPinned, isHovered, onPinToggle, onMouseEnter, onMouseLeave,
       <div className="sidebar-content">
         <ul className="menu">
           {menuItems.map((item, index) => (
-            <li key={index} className={`menu-item rounded ${item.class=='bg-oscure' ? 'bg-oscure' : ''} ${item.rol==2 ? '' : 'd-none'}`}>
+            <li key={index} className={`menu-item rounded ${item.class=='bg-oscure' ? 'bg-oscure' : ''}  ${item.rol.includes(rol) ? '' : 'd-none'}`}>
               <div 
                 className="menu-item-header"
                 onClick={() => item.subItems && toggleExpand(item.title)}

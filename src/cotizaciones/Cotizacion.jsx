@@ -11,6 +11,7 @@ import CotizacionPdf from "../utils/CotizacionPdf";
 import { all } from "axios";
 
 const Cotizacion=({elemented,elementedC})=> {
+    
     const [loadingIcon,setLoadingIcon] = useState(false);
     const [checkStatus,setCheckStatus] = useState(false);
     const [checkStatusView,setCheckStatusView] = useState(true);
@@ -392,9 +393,9 @@ const Cotizacion=({elemented,elementedC})=> {
                 setValue('elementedC_fechaVigencia',elementedC?.fechaVigencia);
                 document.getElementById('elementedC_fechaVigencia').innerHTML=elementedC?.fechaVigencia || "";
                 setValue('elementedC_cliente',elementedC?.cliente);
-                document.getElementById('elementedC_cliente').innerHTML=buscarClientePorId(elementedC?.cliente).razonSocial || "";
+                document.getElementById('elementedC_cliente').innerHTML=buscarClientePorId(elementedC?.cliente)?.razonSocial || "";
                 setValue('elementedC_producto',elementedC?.producto);
-                document.getElementById('elementedC_producto').innerHTML=buscaProductoPorId(elementedC?.producto).nombre || "";
+                document.getElementById('elementedC_producto').innerHTML=buscaProductoPorId(elementedC?.producto)?.nombre || "";
                 setValue('elementedC_descripcionProducto',elementedC?.descripcionProducto);
                 document.getElementById('elementedC_descripcionProducto').innerHTML=elementedC?.descripcionProducto || "";
                 setValue('elementedC_tipoProducto',elementedC?.tipoProducto);
@@ -617,10 +618,13 @@ const Cotizacion=({elemented,elementedC})=> {
         }
     } 
     const obtenerMaquinaPorNombre = (nombreProducto) => {
+        
          let preciow = allDatas.maquinas.filter(maquina => maquina.nombre === nombreProducto);
+         console.log('preciow',preciow)
          return preciow[0].precio
     };
-    async function cotizar(cantidad,Diferir,DiferirTr){
+   function cotizar(cantidad,Diferir,DiferirTr,coti_number){
+        console.log('value',watch())
         try {
             let P1 =60;   //2     //	Factor seguridad imprevistos
             let P2 =15;   //3     //	Factor para registro tintas
@@ -632,20 +636,20 @@ const Cotizacion=({elemented,elementedC})=> {
             let P8 =220;   //9     //	Costo troquel Flexible
             let P9 =115;   //10     //	Flete
             let P10 =4200;   //11    //	TRM
-            let P11 =100;   //12    //	Valor Cm2 fotopolimero
+            let P11 =120;   //12    //	Valor Cm2 fotopolímero
             let P12 =400000;   //13    //	Costo troquel plano
             let P12p =400000;   //13    //	Costo troquel plano
             let P13 = 200000 ; //14      //	Costo par
-            let P14 =10000;   //15    //	Valor hora embobinado
+            let P14 =12300;   //15    //	Valor hora embobinado
             let P15 =600;   //16    //	Capacidad embobinado
-            let P16 =10000;   //17    //	Valor Hora Hojeado
+            let P16 =12300;   //17    //	Valor Hora Hojeado
             let P17 =3600;   //18    //	Capacidad de Hojeado
-            let P18 =10000;   //19    //	Valor hora pegado
-            let P19 =10000;   //20    //	Valor hora cortado
+            let P18 =12300;   //19    //	Valor hora pegado
+            let P19 =12300;   //20    //	Valor hora cortado
             let P20 =600;   //21    //	Capacidad pegado
             let P21 =3600;   //22    //	Capacidad cortadora
             let P22 =100000;   //23    //	Valor Clisé (hot stamping)
-            let P23 =10000;   //24    //	Valor Maquina Hora (hot stamping)
+            let P23 =12300;   //24    //	Valor Maquina Hora (hot stamping)
             let P24 =3600;   //25    //	Capacidad Maquina (Hot stamping)
             let P25 =10;   //26    //	Tiempo Graduacion Plancha
             let P26 =10;   //27    //	Tiempo graduacion tintas
@@ -655,7 +659,7 @@ const Cotizacion=({elemented,elementedC})=> {
             let P30 =0;   //31    //	Tiempo shockair
             let P31 =50;   //32    //	Costo aire shockair por minuto
             let P32 =parseFloat(obtenerMaquinaPorNombre(watch('maquina')));  
-            setValue('P32',P32) //33    //	Valor hora máquina flexo
+            setValue('P32',P32) //33    //	Valor hora máquina flexo () (subir a $ 80.000)
             let P33 =2271;   //34    //	Precio material
             let P34 =450;   //35    //	Precio acabado
             let P35 =1400;   //36    //	Precio Cold Foild
@@ -664,17 +668,17 @@ const Cotizacion=({elemented,elementedC})=> {
             let P38 =30000;   //39    //	Metros de graduación
             let P39 =64;   //40    //	Ancho rollo hot stamping
             let P40 =120;   //41    //	Largo rollo hot stamping
-            let P41 =10000;   //42    //	Valor empaque por hora
+            let P41 =12300;   //42    //	Valor empaque por hora
             let P42 =10;   //43    //	Capacidad de empaque (rollos/min)
             let P43 =25000;   //44    //	Precio transporte por caja
-            let P44 =10000;   //45    //	Valor troqueladora hora
+            let P44 =12300;   //45    //	Valor troqueladora hora
             let P45 =3600;   //46    //	Capacidad (Golpes/hora)
             let P46 =1;   //47    //	Tiempo de graduación troquel
             let P47 =0.3;  //48     //	Espacio de etiquetas a lo ancho
             let P48 =0.7;  //49     //	Espacio exterior (barras)
             let P49 =1;   //50    //	Espesor core
-            let P50 =0;   //51    //	
-            let P51 =0;   //52    //	
+            let P50 =9840;   //51    //	Preparación de pantone
+            let P51 =0;   //52    //  Sherpa ($ 20.000)
             let K1 =0.3175;  //53      //	Constante de unidad
             let K2 =4;   //54     //	Constante de formula diametro rollo
             let K3 =2.54;  //55      //	Pulgadas a Cm
@@ -738,6 +742,28 @@ const Cotizacion=({elemented,elementedC})=> {
             setValue('CCaja',CCaja)
             let NCajas=Math.round(C/(ER*CCaja)) || 0;     //	Numero de Cajas
             setValue('NCajas',NCajas)
+            switch (coti_number) {
+                case (1):
+                    setValue('NCajas1',NCajas)
+                    break;
+                case (2):
+                    setValue('NCajas2',NCajas)
+                    break;
+                case (3):
+                    setValue('NCajas3',NCajas)
+                    break;
+                case (4):
+                    setValue('NCajas4',NCajas)
+                    break;
+                case (5):
+                    setValue('NCajas5',NCajas)
+                    break;
+                case (6):
+                    setValue('NCajas6',NCajas)
+                    break;
+                default:
+                    setValue('NCajas7',NCajas)
+            }
             let Am=(Aet*Acr)+(Ee*(Acr-1))+2*P48 || 0;    //	Ancho de Material            
             setValue('Am',Am)
             let LP=(C*AR)/(Around*Acr*100) || 0;     //	Longuitud de Produccion
@@ -916,7 +942,7 @@ const Cotizacion=({elemented,elementedC})=> {
                 safe(Chse) +
                 safe(Cempe) +
                 safe(Ccajae);
-            let cotizarFinal=[{
+            let cotizarFinal={
                 'cantidad'    :C,
                 'Costo_Tinta_Etiqueta'	:safe(Ctte),
                 'Costo_Fotopolimero_etiquetas'	:safe(CFxE),
@@ -925,7 +951,6 @@ const Cotizacion=({elemented,elementedC})=> {
                 'Costo_hojeado_etiqueta'	:safe(Cthe),
                 'Costo_pegado_funda'	:safe(Ctpt),
                 'Costo_corte_funda'	:safe(Ccf),
-                'Costo_Hot_stampong_etiqueta'	:safe(Cthse),
                 'Valor_terminacion_especial_etiqueta'	:safe(Tespe),
                 'Costo_impresion_etiquetas'	:safe(Cime),
                 'Costo_sutrato_etiquetas'	:safe(CsuseT),
@@ -934,61 +959,55 @@ const Cotizacion=({elemented,elementedC})=> {
                 'Costo_hot_stampong_etiqueta'	:safe(Chse),
                 'Costo_empaque_etiqueta'	:safe(Cempe),
                 'Costo_transporte_caja_etiqueta'	:safe(Ccajae),
+                'cajas':safe(NCajas),
                 'costo_totaltd':safe(total_costo_etiqueta),
-            }]
-            setAllCoti(cotizarFinal);
-            setMostrartabla(true);
-            console.log(allCoti)
-            const variables = [
-                "Ctte","AF","Cf","Nf","DifF","DiferirF","CFxE","DifT","CTr","DiferirT","CTxE",
-                "Tem","Cem","Ceme","Nexh","Nhojas","Tth","Cth","Cthe","Cthh","Ttp","Ctp",
-                "Ctpt","Ttc","Ctc","Ccf","Cttt","TgHs","TtHs","Cths","Cthse","Tesp","Tespe",
-                "NRef","NAP","NAT","Ntf","Nta","Ntl","Vim","Tim","Tgradt","Tgradp","Cim","Cime",
-                "Csus","CsuseT","Cac","CaceT","Acol","Ccol","Ccole","Lhs","Ahs","AreaHs",
-                "AreaRHs","NRHS","CHS","Chse","NRollos","Temp","Cemp","Cempe","Ctransporte",
-                "Ccajae","Ngolpes","Tttp","Cttp","Cttpe"
-                ];
-            const data = {
-                Ctte, AF, Cf, Nf, DifF, DiferirF, CFxE, DifT, CTr, DiferirT, CTxE,
-                Tem, Cem, Ceme, Nexh, Nhojas, Tth, Cth, Cthe, Cthh, Ttp, Ctp,
-                Ctpt, Ttc, Ctc, Ccf, Cttt, TgHs, TtHs, Cths, Cthse, Tesp, Tespe,
-                NRef, NAP, NAT, Ntf, Nta, Ntl, Vim, Tim, Tgradt, Tgradp, Cim, Cime,
-                Csus, CsuseT, Cac, CaceT, Acol, Ccol, Ccole, Lhs, Ahs, AreaHs,
-                AreaRHs, NRHS, CHS, Chse, NRollos, Temp, Cemp, Cempe, Ctransporte,
-                Ccajae, Ngolpes, Tttp, Cttp, Cttpe
-                };
-            function descargarCSV(variables, data, nombreArchivo = "variables.csv") {
-                // Crear encabezado CSV
-                const header = variables.join(",");
-
-                // Crear fila con valores en el mismo orden
-                const values = variables.map(v => data[v] ?? "").join(",");
-
-                // Unir en formato CSV
-                const csvContent = header + "\n" + values;
-
-                // Crear el archivo descargable
-                const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-                const url = URL.createObjectURL(blob);
-
-                // Crear link de descarga
-                const link = document.createElement("a");
-                link.href = url;
-                link.download = nombreArchivo;
-                link.click();
-
-                // Limpiar URL
-                URL.revokeObjectURL(url);
-            }
-            descargarCSV(variables, data, "cotizacion_variables.csv");
+                'utilidad':safe(total_costo_etiqueta*(parseFloat(watch('utilidad'))/100)),
+                'comision':safe(total_costo_etiqueta*(parseFloat(watch('comision'))/100)),
+                'precio_final':safe(total_costo_etiqueta*(1+(parseFloat(watch('utilidad'))/100)+(parseFloat(watch('comision'))/100)))
+            };
+           
+           
+            return cotizarFinal;
+            
 
 
         } catch (error) {
-            console.log(error)
+            return 'No se pudo cotizar';
         }
         
 
 
+    }
+    async function generador_cotizaciones(){
+        setAllCoti([]);
+        setTimeout(() => {
+            let tiene_c=false;
+            let allCotiLocal=[];
+            for (let index = 1; index <= 11; index++) {
+                let cant_n='elementedC_cantidad'+index;
+                if (watch(cant_n) && watch(cant_n)>0) {
+                    let c=cotizar(watch(cant_n),watch('difFotopolimero'+index),watch('difTroquel'+index),index);
+                    
+                    if (c==='No se pudo cotizar') {
+                        alert('Error al cotizar elemento '+index);
+                        tiene_c=false;
+                    }else{
+                        allCotiLocal.push(c);
+                        tiene_c=true;
+                    }
+                    
+                }   
+            }
+            setAllCoti(allCotiLocal);
+            if (tiene_c==false ) {
+                alert('No hay cantidades para cotizar');
+            }else{
+                console.log('allCoti',allCotiLocal)            
+                setMostrartabla(true);
+                
+            }
+            
+        }, 2000);
     }
     
     return (
@@ -1916,12 +1935,12 @@ const Cotizacion=({elemented,elementedC})=> {
                                 </div>
                               
                                
-                                <h4 className="col-12 text-black mt-3" style={{textAlign: "center"}}>Recargo</h4>
+                                <h4 className="col-12 text-black mt-3 d-none" style={{textAlign: "center"}}>Recargo</h4>
                                 <hr style={{marginTop:" -1px", border: "N000000 2px solid"}}/>
                                 <div className="col-12 zoom90 " style={{ flexDirection:"row"}}>
                                     <div className="form-floating  mx-auto p-1 col-12 ">
-                                        <div className="form-control" id="" style={{display: "flex", flexDirection: "column", height: "430px"}}>
-                                            <div style={{display: "flex", flexDirection:"row"}}>
+                                        <div className="form-control " id="" style={{display: "flex", flexDirection: "column", height: "auto"}}>
+                                            <div className="d-none" style={{display: "flex", flexDirection:"row"}}>
                                                 <div className="form-check col-3">
                                                     <input className="form-check-input" type="radio" {...register("recargoTrnsporte")} id="recargoTrnsporteCM" value="Corte Manual" />
                                                     <label style={{color:"N000000"}} className="form-check-label" htmlFor="recargoTrnsporteCM">
@@ -1948,7 +1967,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                                 </div>
                                                
                                             </div>
-                                            <div style={{display: "flex", flexDirection:"row"}}>
+                                            <div className="d-none" style={{display: "flex", flexDirection:"row"}}>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "25% "}}>
                                                     <input type="text" className="form-control" id="recargoTrnsporteCMCosto" {...register("recargoTrnsporteCMCosto")} />
                                                     <label style={{color:"N000000"}} htmlFor="recargoTrnsporteCMCosto">$ Valor</label>
@@ -1966,42 +1985,40 @@ const Cotizacion=({elemented,elementedC})=> {
                                                     <label style={{color:"N000000"}} htmlFor="recargoTrnsporteOtroCosto">$ Valor</label>
                                                 </div>
                                             </div>
-                                            <h4 className="col-12 text-black mt-4" style={{textAlign: "center"}}>Ciudad de envio</h4>
+                                            <h4 className="col-12 text-black " style={{textAlign: "center"}}>Cantidad de cajas</h4>
                                             <hr style={{width:"100%" ,marginTop: "10px", border: "N000000 2px solid"}}/>
                                             
                                             <div className="col-12 zoom90 mt-4" style={{display: "flex", flexDirection:"row"}}>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad1" {...register("cajas_cantidad1")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad1">Cajas cantidad 1</label>
+                                                    <input type="text" className="form-control" id="NCajas1" {...register("NCajas1")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas1">Cajas 1</label>
                                                 </div>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad2" {...register("cajas_cantidad2")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad2">Cajas cantidad 2</label>
+                                                    <input type="text" className="form-control" id="NCajas2" {...register("NCajas2")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas2">Cajas 2</label>
                                                 </div>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad3" {...register("cajas_cantidad3")}  />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad3">Cajas cantidad 3</label>
+                                                    <input type="text" className="form-control" id="NCajas3" {...register("NCajas3")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas3">Cajas 3</label>
                                                 </div>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad4" {...register("cajas_cantidad4")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad4">Cajas cantidad 4</label>
+                                                    <input type="text" className="form-control" id="NCajas4" {...register("NCajas4")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas4">Cajas 4</label>
                                                 </div>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad5" {...register("cajas_cantidad5")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad5">Cajas cantidad 5</label>
+                                                    <input type="text" className="form-control" id="NCajas5" {...register("NCajas5")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas5">Cajas 5</label>
                                                 </div>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad6" {...register("cajas_cantidad6")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad6">Cajas cantidad 6</label>
+                                                    <input type="text" className="form-control" id="NCajas6" {...register("NCajas6")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas6">Cajas 6</label>
                                                 </div>
                                                 <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad7" {...register("cajas_cantidad7")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad7">Cajas cantidad 7</label>
+                                                    <input type="text" className="form-control" id="NCajas7" {...register("NCajas7")}   />
+                                                    <label style={{color:"N000000"}} htmlFor="NCajas7">Cajas 7</label>
                                                 </div>
-                                                <div className="form-floating  mx-auto p-1 " style={{width: "12.5%"}}>
-                                                    <input type="text" className="form-control" id="cajas_cantidad8" {...register("cajas_cantidad8")}   />
-                                                    <label style={{color:"N000000"}} htmlFor="cajas_cantidad8">Cajas cantidad 8</label>
-                                                </div>
+                                              
+                                                
                                             </div>
                                         </div>
 
@@ -2027,7 +2044,7 @@ const Cotizacion=({elemented,elementedC})=> {
 
                                 </div>
                                 <div className="col-12" style={{display: "flex", flexDirection:"row"}}>
-                                    <button id="cotizarB" type="button" className="btn btn-success mx-auto col-8 text-black mt-3 mb-2 p-2" onClick={()=>{cotizar(watch('elementedC_cantidad1'),watch('difFotopolimero1'),watch('difTroquel1'));onSubmitForm(watch())}}>Cotizar</button>
+                                    <button id="cotizarB" type="button" className="btn btn-success mx-auto col-8 text-black mt-3 mb-2 p-2" onClick={()=>{generador_cotizaciones()}}>Cotizar</button>
                                 </div>
                             </div>
                         </div>
@@ -2049,7 +2066,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                         
                                         columns={[
                                         {title:'cantidad',field:'cantidad'},
-                                        {title:'Costo_Tinta_Etiqueta',field:'Costo_Tinta_Etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo tinta',field:'Costo_Tinta_Etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2057,7 +2074,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_Fotopolimero_etiquetas',field:'Costo_Fotopolimero_etiquetas',formatter:"money", formatterParams:{
+                                        {title:'Costo fotopolimero',field:'Costo_Fotopolimero_etiquetas',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2065,7 +2082,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_troquel_etiqueta',field:'Costo_troquel_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo troquel',field:'Costo_troquel_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2073,7 +2090,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_embobinado_etiqueta',field:'Costo_embobinado_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo embobinado',field:'Costo_embobinado_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2081,7 +2098,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_hojeado_etiqueta',field:'Costo_hojeado_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo hojeado',field:'Costo_hojeado_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2089,7 +2106,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_pegado_funda',field:'Costo_pegado_funda',formatter:"money", formatterParams:{
+                                        {title:'Costo pegado funda',field:'Costo_pegado_funda',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2097,7 +2114,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_corte_funda',field:'Costo_corte_funda',formatter:"money", formatterParams:{
+                                        {title:'Costo corte funda',field:'Costo_corte_funda',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2105,7 +2122,8 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_Hot_stampong_etiqueta',field:'Costo_Hot_stampong_etiqueta',formatter:"money", formatterParams:{
+                                       
+                                        {title:'Costo terminación especial',field:'Valor_terminacion_especial_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2113,7 +2131,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Valor_terminacion_especial_etiqueta',field:'Valor_terminacion_especial_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo impresion',field:'Costo_impresion_etiquetas',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2121,7 +2139,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_impresion_etiquetas',field:'Costo_impresion_etiquetas',formatter:"money", formatterParams:{
+                                        {title:'Costo sutrato',field:'Costo_sutrato_etiquetas',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2129,7 +2147,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_sutrato_etiquetas',field:'Costo_sutrato_etiquetas',formatter:"money", formatterParams:{
+                                        {title:'Costo acabado',field:'Costo_acabado_Etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2137,7 +2155,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_acabado_Etiqueta',field:'Costo_acabado_Etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo cold-foil',field:'Costo_coldfoil_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2145,7 +2163,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_coldfoil_etiqueta',field:'Costo_coldfoil_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo hot-stampong',field:'Costo_hot_stampong_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2153,7 +2171,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_hot_stampong_etiqueta',field:'Costo_hot_stampong_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo empaque',field:'Costo_empaque_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2161,7 +2179,7 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_empaque_etiqueta',field:'Costo_empaque_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Costo transporte',field:'Costo_transporte_caja_etiqueta',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2169,7 +2187,16 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'Costo_transporte_caja_etiqueta',field:'Costo_transporte_caja_etiqueta',formatter:"money", formatterParams:{
+                                        {title:'Cajas',field:'cajas'},
+                                        {title:'Subtotal',field:'costo_totaltd',formatter:"money", formatterParams:{
+                                            decimal:",",
+                                            thousand:".",
+                                            symbol:"$",
+                                            symbolAfter:false,
+                                            negativeSign:true,
+                                            precision:2,
+                                        }},    
+                                        {title:'Utilidad',field:'utilidad',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
@@ -2177,7 +2204,15 @@ const Cotizacion=({elemented,elementedC})=> {
                                             negativeSign:true,
                                             precision:2,
                                         }},
-                                        {title:'costo_totaltd',field:'costo_totaltd',formatter:"money", formatterParams:{
+                                        {title:'Comision',field:'comision',formatter:"money", formatterParams:{
+                                            decimal:",",
+                                            thousand:".",
+                                            symbol:"$",
+                                            symbolAfter:false,
+                                            negativeSign:true,
+                                            precision:2,
+                                        }},
+                                        {title:'Precio final',field:'precio_final',formatter:"money", formatterParams:{
                                             decimal:",",
                                             thousand:".",
                                             symbol:"$",
